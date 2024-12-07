@@ -1,11 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  ParseArrayPipe,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,28 +17,35 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @Get() // Get all users or /users?ensembleId=value
+  async findAll(
+    @Query('ensembleId', new ParseArrayPipe({ optional: true, items: String }))
+    ensembleId?: string | string[],
+  ) {
+    const ensembleIds = Array.isArray(ensembleId)
+      ? ensembleId
+      : ensembleId?.split(',');
+
+    return this.usersService.findAll(ensembleIds);
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Get(':_id') // Get specific user/:_id
+  findOne(@Param('_id') _id: string) {
+    return this.usersService.findOne(_id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Post() // Create a new user
+  create(@Body() user: CreateUserDto) {
+    return this.usersService.create(user);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Patch(':_id') // Patch/Edit specific user/:_id
+  update(@Param('_id') _id: string, @Body() userUpdate: UpdateUserDto) {
+    return this.usersService.update(_id, userUpdate);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @Delete(':_id') // Delete a specific user
+  delete(@Param('_id') _id: string) {
+    return this.usersService.delete(_id);
   }
 }
