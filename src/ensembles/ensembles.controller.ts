@@ -4,8 +4,8 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
+  Param,
 } from '@nestjs/common';
 import { EnsemblesService } from './ensembles.service';
 import { CreateEnsembleDto } from './dto/create-ensemble.dto';
@@ -15,31 +15,28 @@ import { UpdateEnsembleDto } from './dto/update-ensemble.dto';
 export class EnsemblesController {
   constructor(private readonly ensemblesService: EnsemblesService) {}
 
-  @Post()
-  create(@Body() createEnsembleDto: CreateEnsembleDto) {
-    return this.ensemblesService.create(createEnsembleDto);
-  }
-
-  @Get()
-  findAll() {
+  @Get() // Get all ensembles
+  async findAll() {
     return this.ensemblesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ensemblesService.findOne(+id);
+  @Get(':_id') // Get a specific ensemble
+  findOne(@Param('_id') id: string) {
+    return this.ensemblesService.findOne(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateEnsembleDto: UpdateEnsembleDto,
-  ) {
-    return this.ensemblesService.update(+id, updateEnsembleDto);
+  @Post() // Create a new ensemble
+  create(@Body() ensemble: CreateEnsembleDto) {
+    return this.ensemblesService.create(ensemble);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ensemblesService.remove(+id);
+  @Patch(':_id') // Update ensemble
+  update(@Param('_id') _id: string, @Body() ensembleUpdate: UpdateEnsembleDto) {
+    return this.ensemblesService.update(_id, ensembleUpdate);
+  }
+
+  @Delete(':_id') // Delete ensemble
+  delete(@Param('_id') _id: string) {
+    return this.ensemblesService.delete(_id);
   }
 }

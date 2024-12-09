@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsEnum, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateEnsembleDto {
   @IsString()
@@ -19,38 +19,37 @@ export class CreateEnsembleDto {
   @IsString()
   city: string;
 
-  @IsString()
-  activeMusicians: string;
+  @IsEnum(['1-4', '5-9', '10-24', '25-49', '50+'])
+  activeMusicians: '1-4' | '5-9' | '10-24' | '25-49' | '50+';
 
-  @IsString()
-  practiceFrequency: string;
+  @IsEnum(['daily', 'weekly', 'bi-weekly', 'monthly', 'bi-monthly'])
+  practiceFrequency:
+    | 'daily'
+    | 'weekly'
+    | 'bi-weekly'
+    | 'monthly'
+    | 'bi-monthly';
 
-  @IsArray()
-  @IsEnum(['continuous', 'project_based'], { each: true })
-  practiceType: ('continuous' | 'project_based')[];
+  @IsEnum(['continuous', 'project_based'])
+  practiceType: 'continuous' | 'project_based';
 
-  @IsArray()
-  @IsEnum(
-    [
-      'baroque',
-      'folk',
-      'chamber',
-      'romantic',
-      'late-modern',
-      'late-romantic',
-      'symphonic',
-    ],
-    { each: true },
-  )
-  genre: (
+  @IsEnum([
+    'baroque',
+    'folk',
+    'chamber',
+    'romantic',
+    'late-modern',
+    'late-romantic',
+    'symphonic',
+  ])
+  genre:
     | 'baroque'
     | 'folk'
     | 'chamber'
     | 'romantic'
     | 'late-modern'
     | 'late-romantic'
-    | 'symphonic'
-  )[];
+    | 'symphonic';
 
   @IsDateString()
   createdAt: string;
@@ -59,5 +58,6 @@ export class CreateEnsembleDto {
   updatedAt: string;
 
   @IsDateString()
+  @IsOptional()
   deactivatedAt: string;
 }

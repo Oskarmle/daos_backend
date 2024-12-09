@@ -27,7 +27,7 @@ export class UsersController {
     return this.usersService.findAll(ensembleIds);
   }
 
-  @Get(':_id') // Get specific user/:_id
+  @Get(':email') // Get specific user/:_id
   findOne(@Param('email') email: string) {
     return this.usersService.findOne(email);
   }

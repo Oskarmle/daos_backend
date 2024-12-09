@@ -1,26 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateEnsembleDto } from './dto/create-ensemble.dto';
 import { UpdateEnsembleDto } from './dto/update-ensemble.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Ensemble, EnsembleDocument } from './schemas/Ensemble.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class EnsemblesService {
-  create(createEnsembleDto: CreateEnsembleDto) {
-    return 'This action adds a new ensemble';
+  constructor(
+    @InjectModel(Ensemble.name)
+    private readonly ensembleModel: Model<EnsembleDocument>,
+  ) {}
+
+  async findAll(): Promise<EnsembleDocument[]> {
+    return this.ensembleModel.find().exec();
   }
 
-  findAll() {
-    return `This action returns all ensembles`;
+  async findOne(_id: string): Promise<EnsembleDocument> {
+    const ensemble = this.ensembleModel.findOne({ _id }).exec();
+
+    if (!ensemble) {
+      throw new UnauthorizedException('Ensemble not found');
+    }
+    return ensemble;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ensemble`;
+  async create(ensemble: CreateEnsembleDto): Promise<EnsembleDocument> {
+    const newEnsemble = new this.ensembleModel(ensemble);
+    return await newEnsemble.save();
   }
 
-  update(id: number, updateEnsembleDto: UpdateEnsembleDto) {
-    return `This action updates a #${id} ensemble`;
+  async update(
+    _id: string,
+    updatedEnsemble: UpdateEnsembleDto,
+  ): Promise<EnsembleDocument> {
+    const updated = await this.ensembleModel
+      .findByIdAndUpdate(_id, { ...updatedEnsemble }, { new: true })
+      .exec();
+
+    if (!updated) {
+      throw new Error(`Ensemble with the ID ${_id} not found`);
+    }
+    return updated;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ensemble`;
+  async delete(_id: string) {
+    const deletedEnsemble = await this.ensembleModel.findByIdAndDelete(_id, {
+      new: true,
+    });
+    return deletedEnsemble;
   }
 }
