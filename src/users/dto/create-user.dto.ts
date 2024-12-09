@@ -38,9 +38,9 @@ export class CreateUserDto {
   ensembleIds: string[];
 
   @IsDateString()
-  createdAt: string;
+  createdAt: Date;
 
   @IsDateString()
   @IsOptional()
-  updatedAt?: string;
+  updatedAt: Date;
 }

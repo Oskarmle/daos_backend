@@ -42,8 +42,8 @@ export class UpdateUserDto {
 
   @IsString()
   @IsOptional()
-  createdAt?: string;
+  createdAt?: Date;
 
   @IsString()
-  updatedAt: string;
+  updatedAt: Date;
 }

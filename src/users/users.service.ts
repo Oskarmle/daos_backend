@@ -41,6 +41,9 @@ export class UsersService {
   }
 
   update(_id: string, updatedUser: UpdateUserDto): Promise<UserDocument> {
+    if (!updatedUser.updatedAt) {
+      updatedUser.updatedAt = new Date();
+    }
     const updated = this.userModel
       .findByIdAndUpdate(_id, { ...updatedUser }, { new: true })
       .exec();
