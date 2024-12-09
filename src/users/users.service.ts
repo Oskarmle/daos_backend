@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,8 +19,12 @@ export class UsersService {
     return this.userModel.find().exec();
   }
 
-  findOne(_id: string): Promise<UserDocument> {
-    const user = this.userModel.findById(_id).exec();
+  findOne(email: string): Promise<UserDocument> {
+    const user = this.userModel.findOne({ email }).exec();
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
     return user;
   }
 

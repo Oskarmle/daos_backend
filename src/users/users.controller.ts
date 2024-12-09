@@ -6,11 +6,9 @@ import {
   Param,
   ParseArrayPipe,
   Patch,
-  Post,
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
@@ -30,14 +28,14 @@ export class UsersController {
   }
 
   @Get(':_id') // Get specific user/:_id
-  findOne(@Param('_id') _id: string) {
-    return this.usersService.findOne(_id);
+  findOne(@Param('email') email: string) {
+    return this.usersService.findOne(email);
   }
 
-  @Post() // Create a new user
-  create(@Body() user: CreateUserDto) {
-    return this.usersService.create(user);
-  }
+  // @Post() // Create a new user
+  // create(@Body() user: CreateUserDto) {
+  //   return this.usersService.create(user);
+  // }
 
   @Patch(':_id') // Patch/Edit specific user/:_id
   update(@Param('_id') _id: string, @Body() userUpdate: UpdateUserDto) {
