@@ -20,8 +20,8 @@ export class UsersService {
     return this.userModel.find().exec();
   }
 
-  findOne(email: string): Promise<UserDocument> {
-    const user = this.userModel.findOne({ email }).exec();
+  findOne(_id: string): Promise<UserDocument> {
+    const user = this.userModel.findOne({ _id }).exec();
 
     if (!user) {
       throw new NotFoundException('user not found');

@@ -27,9 +27,9 @@ export class UsersController {
     return this.usersService.findAll(ensembleIds);
   }
 
-  @Get(':email') // Get specific user/:_id
-  findOne(@Param('email') email: string) {
-    return this.usersService.findOne(email);
+  @Get(':_id') // Get specific user/:_id
+  findOne(@Param('_id') _id: string) {
+    return this.usersService.findOne(_id);
   }
 
   // @Post() // Create a new user
