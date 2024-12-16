@@ -15,7 +15,7 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true })
+  @Prop({ default: () => new Date() })
   acceptedTocAt: Date;
 
   @Prop()
@@ -34,7 +34,8 @@ export class User {
   @Optional()
   bio?: string;
 
-  @Prop({ required: true })
+  @Prop()
+  @Optional()
   birthDate: Date;
 
   @Prop()

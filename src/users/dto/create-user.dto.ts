@@ -11,7 +11,7 @@ export class CreateUserDto {
   password: string;
 
   @IsDateString()
-  acceptedTocAt: string;
+  acceptedTocAt: Date;
 
   @IsDateString()
   @IsOptional()
@@ -30,6 +30,7 @@ export class CreateUserDto {
   bio?: string;
 
   @IsDateString()
+  @IsOptional()
   birthDate: string;
 
   @IsArray()
