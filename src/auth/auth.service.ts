@@ -21,6 +21,7 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect password');
     }
     const payload = {
+      fullName: user.fullName,
       email: user.email,
       id: user.id,
       ensembleIds: user.ensembleIds,
