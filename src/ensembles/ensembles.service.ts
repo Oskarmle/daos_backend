@@ -50,7 +50,19 @@ export class EnsemblesService {
       updatedEnsemble.registeredUsers &&
       updatedEnsemble.registeredUsers.length > 0
     ) {
-      updated.registeredUsers.push(...updatedEnsemble.registeredUsers);
+      const existingUserIds = updated.registeredUsers.map((user) => user.id);
+
+      // Filter out users that already exist in registeredUsers
+      const newUsers = updatedEnsemble.registeredUsers.filter(
+        (user) => !existingUserIds.includes(user.id),
+      );
+
+      if (newUsers.length === 0) {
+        throw new Error('User is already registered for this ensemble.');
+      }
+
+      // Push only unique users into the registeredUsers array
+      updated.registeredUsers.push(...newUsers);
     }
 
     return await updated.save();
