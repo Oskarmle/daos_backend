@@ -1,35 +1,15 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
+import { Injectable } from '@nestjs/common';
+import { ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { AuthGuard as PassportAuthGuard } from '@nestjs/passport'; // Import the base Passport AuthGuard
 
 @Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
-
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
-    if (!token) {
-      throw new UnauthorizedException();
-    }
-    try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_SECRET,
-      });
-      request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException();
-    }
-    return true;
+export class AuthGuard extends PassportAuthGuard('jwt') {
+  constructor(private reflector: Reflector) {
+    super(); // Calls the Passport JWT strategy for validation
   }
 
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'bearer' ? token : undefined;
+  canActivate(context: ExecutionContext) {
+    return super.canActivate(context); // This will now invoke the JwtStrategy to validate the JWT
   }
 }

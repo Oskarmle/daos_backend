@@ -9,7 +9,8 @@ export class Ensemble {
   @Prop({ required: true, unique: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop()
+  @Optional()
   imageUrl: string;
 
   @Prop({ required: true })
@@ -35,6 +36,9 @@ export class Ensemble {
 
   @Prop({ required: true })
   genre: string;
+
+  @Prop({ type: [{ fullName: String, id: String }] })
+  registeredUsers: { fullName: string; id: string }[];
 
   @Prop({ default: () => new Date(), required: true })
   createdAt: Date;

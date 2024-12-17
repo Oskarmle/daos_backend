@@ -56,6 +56,10 @@ export class UpdateEnsembleDto {
     | 'late-romantic'
     | 'symphonic';
 
+  @IsString()
+  @IsOptional()
+  registeredUsers: string[];
+
   @IsDateString()
   @IsOptional()
   createdAt: string;

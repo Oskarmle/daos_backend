@@ -1,10 +1,21 @@
-import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { RegisteredUser } from './registered-user.dto';
 
 export class CreateEnsembleDto {
   @IsString()
   name: string;
 
   @IsString()
+  @IsOptional()
   imageUrl: string;
 
   @IsString()
@@ -50,6 +61,12 @@ export class CreateEnsembleDto {
     | 'late-modern'
     | 'late-romantic'
     | 'symphonic';
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => RegisteredUser)
+  registeredUsers: RegisteredUser[];
 
   @IsDateString()
   createdAt: string;

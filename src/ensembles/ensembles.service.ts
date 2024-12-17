@@ -26,7 +26,13 @@ export class EnsemblesService {
   }
 
   async create(ensemble: CreateEnsembleDto): Promise<EnsembleDocument> {
-    const newEnsemble = new this.ensembleModel(ensemble);
+    const { registeredUsers, ...ensembleData } = ensemble;
+
+    const newEnsemble = new this.ensembleModel({
+      ...ensembleData,
+      registeredUsers: [...registeredUsers],
+    });
+
     return await newEnsemble.save();
   }
 
