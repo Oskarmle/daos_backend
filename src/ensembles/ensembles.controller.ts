@@ -36,7 +36,10 @@ export class EnsemblesController {
 
   @UseGuards(AuthGuard)
   @Patch(':_id') // Update ensemble
-  update(@Param('_id') _id: string, @Body() ensembleUpdate: UpdateEnsembleDto) {
+  async update(
+    @Param('_id') _id: string,
+    @Body() ensembleUpdate: UpdateEnsembleDto,
+  ) {
     return this.ensemblesService.update(_id, ensembleUpdate);
   }
 

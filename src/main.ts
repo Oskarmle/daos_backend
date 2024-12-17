@@ -6,7 +6,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: ['http://localhost:5173'], // Allow only this origin (your React app)
-    methods: 'GET,POST,PUT,DELETE', // Allow methods you need
+    methods: 'GET,POST,PUT,PATCH,DELETE', // Allow methods you need
     allowedHeaders: 'Content-Type,Authorization', // Allow specific headers
   });
 

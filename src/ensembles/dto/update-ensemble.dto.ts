@@ -1,4 +1,14 @@
-import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { RegisteredUser } from './registered-user.dto';
+import { Type } from 'class-transformer';
 
 export class UpdateEnsembleDto {
   @IsString()
@@ -56,10 +66,11 @@ export class UpdateEnsembleDto {
     | 'late-romantic'
     | 'symphonic';
 
-  @IsString()
-  @IsOptional()
-  registeredUsers: string[];
-
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => RegisteredUser)
+  registeredUsers: RegisteredUser[];
   @IsDateString()
   @IsOptional()
   createdAt: string;

@@ -40,14 +40,20 @@ export class EnsemblesService {
     _id: string,
     updatedEnsemble: UpdateEnsembleDto,
   ): Promise<EnsembleDocument> {
-    const updated = await this.ensembleModel
-      .findByIdAndUpdate(_id, { ...updatedEnsemble }, { new: true })
-      .exec();
+    const updated = await this.ensembleModel.findById(_id);
 
     if (!updated) {
       throw new Error(`Ensemble with the ID ${_id} not found`);
     }
-    return updated;
+
+    if (
+      updatedEnsemble.registeredUsers &&
+      updatedEnsemble.registeredUsers.length > 0
+    ) {
+      updated.registeredUsers.push(...updatedEnsemble.registeredUsers);
+    }
+
+    return await updated.save();
   }
 
   async delete(_id: string) {
