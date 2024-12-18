@@ -3,7 +3,8 @@ import { CreateEnsembleDto } from './dto/create-ensemble.dto';
 import { UpdateEnsembleDto } from './dto/update-ensemble.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Ensemble, EnsembleDocument } from './schemas/Ensemble.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class EnsemblesService {
@@ -28,9 +29,14 @@ export class EnsemblesService {
   async create(ensemble: CreateEnsembleDto): Promise<EnsembleDocument> {
     const { registeredUsers, ...ensembleData } = ensemble;
 
+    const registeredUsersWithObjectId = registeredUsers.map((user) => ({
+      fullName: user.fullName,
+      id: new mongoose.Types.ObjectId(user.id),
+    }));
+
     const newEnsemble = new this.ensembleModel({
       ...ensembleData,
-      registeredUsers: [...registeredUsers],
+      registeredUsers: registeredUsersWithObjectId,
     });
 
     return await newEnsemble.save();
@@ -40,7 +46,9 @@ export class EnsemblesService {
     _id: string,
     updatedEnsemble: UpdateEnsembleDto,
   ): Promise<EnsembleDocument> {
-    const updated = await this.ensembleModel.findById(_id);
+    const updated = await this.ensembleModel.findById(
+      new mongoose.Types.ObjectId(_id),
+    );
 
     if (!updated) {
       throw new Error(`Ensemble with the ID ${_id} not found`);
@@ -54,15 +62,20 @@ export class EnsemblesService {
 
       // Filter out users that already exist in registeredUsers
       const newUsers = updatedEnsemble.registeredUsers.filter(
-        (user) => !existingUserIds.includes(user.id),
+        (user) => !existingUserIds.includes(new Types.ObjectId(user.id)),
       );
 
       if (newUsers.length === 0) {
         throw new Error('User is already registered for this ensemble.');
       }
 
+      const newUsersWithObjectId = newUsers.map((user) => ({
+        fullName: user.fullName,
+        id: new mongoose.Types.ObjectId(user.id), // Correct instantiation
+      }));
+
       // Push only unique users into the registeredUsers array
-      updated.registeredUsers.push(...newUsers);
+      updated.registeredUsers.push(...newUsersWithObjectId);
     }
 
     return await updated.save();

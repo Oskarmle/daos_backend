@@ -1,6 +1,6 @@
 import { Optional } from '@nestjs/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export type EnsembleDocument = HydratedDocument<Ensemble>;
 
@@ -37,8 +37,15 @@ export class Ensemble {
   @Prop({ required: true })
   genre: string;
 
-  @Prop({ type: [{ fullName: String, id: String }] })
-  registeredUsers: { fullName: string; id: string }[];
+  @Prop({
+    type: [
+      {
+        fullName: String,
+        id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      },
+    ],
+  })
+  registeredUsers: { fullName: string; id: mongoose.Types.ObjectId }[];
 
   @Prop({ default: () => new Date(), required: true })
   createdAt: Date;

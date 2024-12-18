@@ -8,10 +8,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
+import { AuthService } from 'src/auth/auth.service';
+import { AuthModule } from 'src/auth/auth.module';
+import { UsersModule } from 'src/users/users.module';
 
 describe('Ensemble (e2e', () => {
   let app: INestApplication;
   let ensembleModel: Model<Ensemble>;
+  let authService: AuthService;
+
+  let token: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -21,6 +27,8 @@ describe('Ensemble (e2e', () => {
           { name: Ensemble.name, schema: EnsembleSchema },
         ]),
         AppModule,
+        AuthModule,
+        UsersModule,
       ],
     }).compile();
 
@@ -30,6 +38,11 @@ describe('Ensemble (e2e', () => {
     ensembleModel = moduleFixture.get<Model<Ensemble>>(
       getModelToken('Ensemble'),
     );
+    authService = moduleFixture.get<AuthService>(AuthService);
+
+    const loginResponse = await authService.login('test@test.com', 'Onsdag12');
+
+    token = loginResponse.access_token;
   });
 
   beforeEach(async () => {
@@ -71,7 +84,7 @@ describe('Ensemble (e2e', () => {
   });
 
   afterAll(async () => {
-    await ensembleModel.deleteMany();
+    // await ensembleModel.deleteMany();
     await app.close();
   });
 
@@ -115,5 +128,29 @@ describe('Ensemble (e2e', () => {
         registeredUsers: [],
       },
     ]);
+  });
+
+  // Testing the post request create for ensembles
+  it('/ensembles (POST) should create a new ensemble', async () => {
+    const ensembleData = {
+      name: 'New Ensemble',
+      description: 'A new test ensemble',
+      website: 'http://test.com',
+      zipCode: '12345',
+      city: 'Test City',
+      activeMusicians: '5-9',
+      practiceFrequency: 'weekly',
+      practiceType: 'project_based',
+      genre: 'pop',
+      registeredUsers: ['6760207a1cecf80940c5d68a'],
+    };
+
+    const response = await request(app.getHttpServer())
+      .post('/ensembles')
+      .set('Authorization', `Bearer ${token}`)
+      .send(ensembleData)
+      .expect(201);
+
+    expect(response.body.name).toBe('New Ensemble');
   });
 });
