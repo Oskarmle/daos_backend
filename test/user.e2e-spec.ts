@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { AuthModule } from 'src/auth/auth.module';
-// import { AuthService } from 'src/auth/auth.service';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { UsersModule } from 'src/users/users.module';
 import { AuthService } from 'src/auth/auth.service';
@@ -20,7 +19,7 @@ describe('User (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot('mongodb://localhost:27017/daos_test'),
+        MongooseModule.forRoot('mongodb://localhost:27017/daos_test_user'),
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
         AppModule,
         AuthModule,
