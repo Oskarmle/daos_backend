@@ -1,7 +1,7 @@
 import {
   Ensemble,
   EnsembleSchema,
-} from 'src/ensembles/schemas/Ensemble.schema';
+} from 'src/ensembles/schemas/ensemble.schema';
 import { INestApplication } from '@nestjs/common';
 import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
