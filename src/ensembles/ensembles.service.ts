@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateEnsembleDto } from './dto/create-ensemble.dto';
 import { UpdateEnsembleDto } from './dto/update-ensemble.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Ensemble, EnsembleDocument } from './schemas/Ensemble.schema';
+import { Ensemble, EnsembleDocument } from './schemas/ensemble.schema';
 import { Model, Types } from 'mongoose';
 import * as mongoose from 'mongoose';
 
