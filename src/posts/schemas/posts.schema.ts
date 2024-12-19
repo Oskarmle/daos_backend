@@ -32,6 +32,9 @@ export class Posts {
   @Prop({ required: true })
   createdBy: string;
 
+  @Prop({ required: true })
+  ensembleIdForPost: string;
+
   @Prop({ default: () => new Date(), required: true })
   createdAt: Date;
 
