@@ -10,17 +10,12 @@ import { PostsModule } from './posts/posts.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // For dev or local
-    // MongooseModule.forRoot('mongodb://localhost:27017/daos'),
-
-    // For prod
-    MongooseModule.forRoot(process.env.MONGODB_URI),
+    MongooseModule.forRoot('mongodb://localhost:27017/daos'),
     UsersModule,
     EnsemblesModule,
     AuthModule,
