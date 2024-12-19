@@ -214,9 +214,15 @@ describe('Ensemble (e2e)', () => {
   });
 
   it('/ensembles:_id (DELETE) should delete the ensemble with the id: 676184da1c51ba9809ddd7ce', async () => {
-    request(app.getHttpServer())
+    await request(app.getHttpServer())
       .delete('/ensembles/676184da1c51ba9809ddd7ce')
       .set('Authorization', `Bearer ${token}`)
-      .expect(204);
+      .expect(200);
+  });
+
+  it('/ensembles:_id (DELETE) should throw an error due to token not being provided', async () => {
+    await request(app.getHttpServer())
+      .delete('/ensembles/676184da1c51ba9809ddd7ce')
+      .expect(401);
   });
 });
