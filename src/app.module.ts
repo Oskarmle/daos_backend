@@ -16,7 +16,11 @@ dotenv.config();
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/daos'),
+    // For dev or local
+    // MongooseModule.forRoot('mongodb://localhost:27017/daos'),
+
+    // For prod
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     UsersModule,
     EnsemblesModule,
     AuthModule,
