@@ -58,9 +58,11 @@ export class EnsemblesService {
       updatedEnsemble.registeredUsers &&
       updatedEnsemble.registeredUsers.length > 0
     ) {
+      // this will be used to check if the user is already registered
       const existingUserIds = updated.registeredUsers.map((user) => user.id);
 
-      // Filter out users that already exist in registeredUsers
+      // this will throw an error if the user is already registered
+      // it works by checking if the user id is already in the registeredUsers array
       const newUsers = updatedEnsemble.registeredUsers.filter(
         (user) => !existingUserIds.includes(new Types.ObjectId(user.id)),
       );

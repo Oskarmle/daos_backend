@@ -9,5 +9,11 @@
   "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/../src/$1"
   },
-  "moduleDirectories": ["node_modules", "src"]
+  "moduleDirectories": ["node_modules", "src"],
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "src/**/*.{js,ts}"
+  ],
+  "coverageDirectory": "./coverage",
+  "coverageReporters": ["json", "lcov", "text", "clover"]
 }
